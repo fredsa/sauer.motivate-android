@@ -5,5 +5,6 @@
     <string name="app_name">Motivate</string>
     <string name="toggle_i_did_it">I did it!</string>
     <string name="toggle_not_yet">Not Yet…</string>
+    <string name="save_button">Send to Mom &amp; Dad</string>
 
 </resources>
