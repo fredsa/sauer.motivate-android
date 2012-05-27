@@ -3,6 +3,7 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Motivate</string>
-    <string name="i_did_it">I did it</string>
+    <string name="toggle_i_did_it">I did it!</string>
+    <string name="toggle_not_yet">Not Yet…</string>
 
 </resources>

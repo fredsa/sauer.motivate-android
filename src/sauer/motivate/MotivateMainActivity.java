@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ToggleButton;
+import android.widget.TextView;
 
 public class MotivateMainActivity extends Activity {
   LinearLayout linearLayout;
@@ -15,10 +15,14 @@ public class MotivateMainActivity extends Activity {
     setContentView(R.layout.motivate_main);
     linearLayout = (LinearLayout) findViewById(R.id.chore_list_linear_layout);
 
-    View choreView = View.inflate(this, R.layout.chore, null);
-    ToggleButton toggleButton = (ToggleButton) choreView.findViewById(R.id.toggle_button);
-    toggleButton.setTextOff("Not yet");
-    toggleButton.setTextOn("Done!");
-    linearLayout.addView(choreView);
+
+    String[] chores = {"Made my bed", "Brushed my teeth", "Helped Mom (Bonus)"};
+    for (String c : chores) {
+      View choreView = View.inflate(this, R.layout.chore, null);
+
+      TextView choreText = (TextView) choreView.findViewById(R.id.chore_text);
+      choreText.setText(c);
+      linearLayout.addView(choreView);
+    }
   }
 }
