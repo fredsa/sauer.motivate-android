@@ -1,10 +1,12 @@
 package sauer.motivate;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,11 +27,13 @@ public class MotivateMainActivity extends Activity {
 
   Date choreDate;
   DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
+  private MotivateApplication application;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     choreDate = new Date();
+    application = (MotivateApplication) getApplication();
 
     setContentView(R.layout.motivate_main);
     choreLinearLayout = (LinearLayout) findViewById(R.id.chore_list_linear_layout);
@@ -49,13 +53,17 @@ public class MotivateMainActivity extends Activity {
   @Override
   protected void onStart() {
     super.onStart();
-    String[] chores = {"Made my bed", "Brushed my teeth", "Helped Mom (Bonus)"};
-    for (String choreText : chores) {
-      addChore(choreText, "25", "¢");
+    ArrayList<Chore> chores = application.getChoresNames();
+    for (Chore chore : chores) {
+      addChore(chore);
     }
   }
 
-  private void addChore(String choreText, String rewardText, String rewardUnit) {
+  private void addChore(Chore chore) {
+    String choreText = chore.getDescription();
+    String rewardText = "" + chore.getRewardAmount();
+    String rewardUnit = chore.getRewardUnit();
+
     View choreView = View.inflate(this, R.layout.chore, null);
     TextView choreTextView = (TextView) choreView.findViewById(R.id.chore_text);
     final TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
@@ -93,8 +101,11 @@ public class MotivateMainActivity extends Activity {
         EditText choreDescriptionEditText = (EditText) newChoreView.findViewById(R.id.choreDescriptionTextEdit);
         EditText rewardAmountEditText = (EditText) newChoreView.findViewById(R.id.reward_amount);
         EditText rewardUnitEditText = (EditText) newChoreView.findViewById(R.id.reward_unit);
-        addChore(choreDescriptionEditText.getText().toString(),
-            rewardAmountEditText.getText().toString(), rewardUnitEditText.getText().toString());
+        float amount = Float.parseFloat(rewardAmountEditText.getText().toString());
+        Chore chore = new Chore(choreDescriptionEditText.getText().toString(), amount,
+            rewardUnitEditText.getText().toString());
+        application.insertChore(chore);
+        addChore(chore);
       }
     });
 
