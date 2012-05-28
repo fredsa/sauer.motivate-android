@@ -6,7 +6,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
 
         <TextView
             android:id="@+id/day_description_text_view"
@@ -21,24 +22,40 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="@string/save_button" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/chore_list_linear_layout"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:layout_weight="1" >
 
-    <TextView
-        android:id="@+id/add_chore_text_view"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/chore_list_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/add_chore"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_weight="0" >
 
-         />
+        <TextView
+            android:id="@+id/add_chore_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/add_chore"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+    />
 
 </LinearLayout>

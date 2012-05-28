@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
