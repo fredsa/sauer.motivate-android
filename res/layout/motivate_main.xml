@@ -17,7 +17,7 @@
             android:text="Sunday, May 27 2012" />
 
         <Button
-            android:id="@+id/save_button"
+            android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"

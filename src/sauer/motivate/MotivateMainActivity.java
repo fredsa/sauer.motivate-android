@@ -3,14 +3,19 @@ package sauer.motivate;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -19,20 +24,23 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MotivateMainActivity extends Activity {
+  private static final String TAG = MotivateMainActivity.class.getName();
+
   protected static final int WHITE = Color.rgb(255, 255, 255);
   protected static final int GRAY = Color.rgb(100, 100, 100);
 
   LinearLayout choreLinearLayout;
+  ArrayList<Chore> chores;
 
   Date choreDate;
   DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
-  private MotivateApplication application;
+  private MotivateApplication app;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     choreDate = new Date();
-    application = (MotivateApplication) getApplication();
+    app = (MotivateApplication) getApplication();
 
     setContentView(R.layout.motivate_main);
     choreLinearLayout = (LinearLayout) findViewById(R.id.chore_list_linear_layout);
@@ -47,18 +55,47 @@ public class MotivateMainActivity extends Activity {
         addChoreAlert();
       }
     });
+
+    Button sendButton = (Button) findViewById(R.id.send_button);
+    sendButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        send();
+      }
+    });
+  }
+
+  protected void send() {
+    Hashtable<String, Float> rewards = new Hashtable<String, Float>();
+    for (Chore chore : chores) {
+      if (!chore.isCompleted()) {
+        continue;
+      }
+      String unit = chore.getRewardUnit();
+      Float total = rewards.get(unit);
+      if (total == null) {
+        total = 0f;
+      }
+      total += chore.getRewardAmount();
+      rewards.put(unit, total);
+    }
+    for (Iterator<Entry<String, Float>> iterator = rewards.entrySet().iterator(); iterator.hasNext();) {
+      Entry<String, Float> entry = iterator.next();
+      String msg = entry.getValue() + " " + entry.getKey();
+      Log.i(TAG, msg);
+    }
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    ArrayList<Chore> chores = application.getChoresNames();
+    chores = app.getChoresNames();
     for (Chore chore : chores) {
       addChore(chore);
     }
   }
 
-  private void addChore(Chore chore) {
+  private void addChore(final Chore chore) {
     String choreText = chore.getDescription();
     String rewardText = "" + chore.getRewardAmount();
     String rewardUnit = chore.getRewardUnit();
@@ -76,6 +113,7 @@ public class MotivateMainActivity extends Activity {
         } else {
           rewardTextView.setTextColor(GRAY);
         }
+        chore.setCompleted(isChecked);
       }
     });
     //toggle color
@@ -103,7 +141,7 @@ public class MotivateMainActivity extends Activity {
         float amount = Float.parseFloat(rewardAmountEditText.getText().toString());
         Chore chore = new Chore(choreDescriptionEditText.getText().toString(), amount,
             rewardUnitEditText.getText().toString());
-        application.insertChore(chore);
+        app.insertChore(chore);
         addChore(chore);
       }
     });
