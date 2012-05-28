@@ -7,11 +7,16 @@
     <uses-sdk android:minSdkVersion="10" />
 
     <application
+        android:name=".MotivateApplication"
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
             android:name=".MotivateMainActivity"
-            android:label="@string/app_name" >
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

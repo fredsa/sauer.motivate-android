@@ -41,7 +41,6 @@ public class MotivateMainActivity extends Activity {
     addChoreTextView.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        addChoreTextView.setText(addChoreTextView.getText() + ".");
         addChoreAlert();
       }
     });
@@ -52,11 +51,11 @@ public class MotivateMainActivity extends Activity {
     super.onStart();
     String[] chores = {"Made my bed", "Brushed my teeth", "Helped Mom (Bonus)"};
     for (String choreText : chores) {
-      addChore(choreText, "25¢");
+      addChore(choreText, "25", "¢");
     }
   }
 
-  private void addChore(String choreText, String rewardText) {
+  private void addChore(String choreText, String rewardText, String rewardUnit) {
     View choreView = View.inflate(this, R.layout.chore, null);
     TextView choreTextView = (TextView) choreView.findViewById(R.id.chore_text);
     final TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
@@ -77,7 +76,7 @@ public class MotivateMainActivity extends Activity {
     toggleButton.setChecked(false);
 
     choreTextView.setText(choreText);
-    rewardTextView.setText(rewardText);
+    rewardTextView.setText(rewardText + " " + rewardUnit);
 
     choreLinearLayout.addView(choreView);
   }
@@ -92,8 +91,10 @@ public class MotivateMainActivity extends Activity {
       @Override
       public void onClick(DialogInterface dialog, int whichButton) {
         EditText choreDescriptionEditText = (EditText) newChoreView.findViewById(R.id.choreDescriptionTextEdit);
-        EditText rewardEditText = (EditText) newChoreView.findViewById(R.id.rewardTextEdit);
-        addChore(choreDescriptionEditText.getText().toString(), rewardEditText.getText().toString());
+        EditText rewardAmountEditText = (EditText) newChoreView.findViewById(R.id.reward_amount);
+        EditText rewardUnitEditText = (EditText) newChoreView.findViewById(R.id.reward_unit);
+        addChore(choreDescriptionEditText.getText().toString(),
+            rewardAmountEditText.getText().toString(), rewardUnitEditText.getText().toString());
       }
     });
 
