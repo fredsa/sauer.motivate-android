@@ -6,14 +6,21 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MotivateMainActivity extends Activity {
+  protected static final int WHITE = Color.rgb(255, 255, 255);
+  protected static final int GRAY = Color.rgb(100, 100, 100);
+
   LinearLayout choreLinearLayout;
 
   Date choreDate;
@@ -52,8 +59,22 @@ public class MotivateMainActivity extends Activity {
   private void addChore(String choreText, String rewardText) {
     View choreView = View.inflate(this, R.layout.chore, null);
     TextView choreTextView = (TextView) choreView.findViewById(R.id.chore_text);
-    TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
-    //    ToggleButton toggleButton = (ToggleButton) choreView.findViewById(R.id.toggle_button);
+    final TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
+
+    ToggleButton toggleButton = (ToggleButton) choreView.findViewById(R.id.toggle_button);
+    toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+          rewardTextView.setTextColor(WHITE);
+        } else {
+          rewardTextView.setTextColor(GRAY);
+        }
+      }
+    });
+    //toggle color
+    toggleButton.setChecked(true);
+    toggleButton.setChecked(false);
 
     choreTextView.setText(choreText);
     rewardTextView.setText(rewardText);
