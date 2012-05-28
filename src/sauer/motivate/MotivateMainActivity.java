@@ -48,7 +48,7 @@ public class MotivateMainActivity extends Activity {
   }
 
   @Override
-  protected void onResume() {
+  protected void onStart() {
     super.onStart();
     String[] chores = {"Made my bed", "Brushed my teeth", "Helped Mom (Bonus)"};
     for (String choreText : chores) {
