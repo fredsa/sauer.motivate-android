@@ -1,5 +1,7 @@
 package sauer.motivate;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +32,9 @@ import android.widget.ToggleButton;
 
 public class MotivateMainActivity extends Activity {
   private static final String TAG = MotivateMainActivity.class.getName();
+
+  private static final String AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN = "oauth2:https://www.googleapis.com/auth/appengine.admin";
+  private static final String AUTH_TOKEN_TYPE_AUTH = "oauth2:https://accounts.google.com/o/oauth2/auth";
 
   protected static final int WHITE = Color.rgb(255, 255, 255);
   protected static final int GRAY = Color.rgb(100, 100, 100);
@@ -79,13 +84,16 @@ public class MotivateMainActivity extends Activity {
       Log.i(TAG, "account.name = " + account.name);
     }
 
-    String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/appengine.admin";
-    accountManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE, null, this,
+    Log.i(TAG, "Get token...");
+    
+    // http://developer.android.com/training/id-auth/authenticate.html
+    accountManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN, null, this,
         new AccountManagerCallback<Bundle>() {
           public void run(AccountManagerFuture<Bundle> future) {
             try {
               String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
               Log.i(TAG, "Got token " + token);
+              testToken(token);
             } catch (OperationCanceledException e) {
               Log.i(TAG, "The user has denied you access to the API");
             } catch (Exception e) {
@@ -93,6 +101,20 @@ public class MotivateMainActivity extends Activity {
             }
           }
         }, null);
+  }
+
+  protected void testToken(String token) {
+    try {
+      // TODO Auto-generated method stub
+      URL url = new URL("http://logs.gwt-voices.appspot.com/");
+      Log.i(TAG, "Testing login using " + url);
+      HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+      //      InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+      //      readStream(in); 
+      urlConnection.disconnect();
+    } catch (Exception e) {
+      Log.i(TAG, "EXECPTION" + e);
+    }
   }
 
   protected void send() {
