@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import android.accounts.Account;
@@ -20,6 +21,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -85,9 +87,19 @@ public class MotivateMainActivity extends Activity {
     }
 
     Log.i(TAG, "Get token...");
-    
+
+    List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
+    headers.add(new Pair<String, String>("X-Fooooooooooooooooooooo", "Bar"));
+    Util.post("http://fredsa-echo.appspot.com/", "", headers);
+    //    Util.post("https://gwt-voices-hrd.appspot.com/_ah/OAuthGetRequestToken", "", headers);
+
     // http://developer.android.com/training/id-auth/authenticate.html
-    accountManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN, null, this,
+    String authTokenType;
+    authTokenType = AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN;
+    //    authTokenType = "oauth2:https://gwt-voices-hrd.appspot.com/_ah/OAuthGetRequestToken";
+    //    authTokenType = "oauth2:https://www.google.com/accounts/OAuthGetRequestToken";
+
+    accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
           public void run(AccountManagerFuture<Bundle> future) {
             try {
