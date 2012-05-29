@@ -7,6 +7,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -63,6 +68,31 @@ public class MotivateMainActivity extends Activity {
         send();
       }
     });
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    AccountManager accountManager = AccountManager.get(this);
+    Account[] accounts = accountManager.getAccountsByType("com.google");
+    for (Account account : accounts) {
+      Log.i(TAG, "account.name = " + account.name);
+    }
+
+    String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/appengine.admin";
+    accountManager.getAuthToken(accounts[0], AUTH_TOKEN_TYPE, null, this,
+        new AccountManagerCallback<Bundle>() {
+          public void run(AccountManagerFuture<Bundle> future) {
+            try {
+              String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+              Log.i(TAG, "Got token " + token);
+            } catch (OperationCanceledException e) {
+              Log.i(TAG, "The user has denied you access to the API");
+            } catch (Exception e) {
+              Log.i(TAG, "Exception: ", e);
+            }
+          }
+        }, null);
   }
 
   protected void send() {
