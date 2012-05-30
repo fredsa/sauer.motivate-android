@@ -1,7 +1,6 @@
 package sauer.motivate;
 
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,13 +72,12 @@ public class MotivateMainActivity extends Activity {
       @Override
       public void onClick(View v) {
         send();
+        doToken();
       }
     });
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
+  private void doToken() {
     AccountManager accountManager = AccountManager.get(this);
     Account[] accounts = accountManager.getAccountsByType("com.google");
     for (Account account : accounts) {
@@ -88,24 +86,32 @@ public class MotivateMainActivity extends Activity {
 
     Log.i(TAG, "Get token...");
 
-    List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
-    headers.add(new Pair<String, String>("X-Fooooooooooooooooooooo", "Bar"));
-    Util.post("http://fredsa-echo.appspot.com/", "", headers);
+    // https://code.google.com/apis/console/?pli=1#project:830498937318:access
+    //    String CLINET_ID = "830498937318.apps.googleusercontent.com";
+    //    String CLIENT_SECRET = "3xi6VWuWnzugNZayJs5gbcu_";
+
+    //    List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
+    //    headers.add(new Pair<String, String>("X-Fooooooooooooooooooooo", "Bar"));
+    //    Util.post("http://fredsa-echo.appspot.com/", "", headers);
     //    Util.post("https://gwt-voices-hrd.appspot.com/_ah/OAuthGetRequestToken", "", headers);
 
     // http://developer.android.com/training/id-auth/authenticate.html
     String authTokenType;
-    authTokenType = AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN;
-    //    authTokenType = "oauth2:https://gwt-voices-hrd.appspot.com/_ah/OAuthGetRequestToken";
+    //        authTokenType = AUTH_TOKEN_TYPE_APP_ENGINE_ADMIN;
+    authTokenType = "oauth2:https://www.googleapis.com/auth/userinfo.email";
+    //        authTokenType = "oauth2:https://fredsa-echo.appspot.com/_ah/OAuthGetRequestToken";
+    //    authTokenType = "oauth2:https://gwt-log-hrd.appspot.com/";
     //    authTokenType = "oauth2:https://www.google.com/accounts/OAuthGetRequestToken";
 
+    Log.i(TAG, "accounts[0] = " + accounts[0].name);
+    Log.i(TAG, "authTokenType = " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
           public void run(AccountManagerFuture<Bundle> future) {
             try {
               String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-              Log.i(TAG, "Got token " + token);
-              testToken(token);
+              Log.i(TAG, "Got token: " + token);
+              //              testToken(token);
             } catch (OperationCanceledException e) {
               Log.i(TAG, "The user has denied you access to the API");
             } catch (Exception e) {
@@ -118,12 +124,12 @@ public class MotivateMainActivity extends Activity {
   protected void testToken(String token) {
     try {
       // TODO Auto-generated method stub
-      URL url = new URL("http://logs.gwt-voices.appspot.com/");
+      String url = "https://fredsa-echo.appspot.com/";
       Log.i(TAG, "Testing login using " + url);
-      HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-      //      InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-      //      readStream(in); 
-      urlConnection.disconnect();
+      List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
+      headers.add(new Pair<String, String>("X-Fooooooooooooooooooooo", "Bar"));
+      headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
+      Util.post(url, "test", headers);
     } catch (Exception e) {
       Log.i(TAG, "EXECPTION" + e);
     }
