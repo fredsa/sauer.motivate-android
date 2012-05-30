@@ -34,6 +34,7 @@ import android.widget.ToggleButton;
 public class MotivateMainActivity extends Activity {
   private static final String TAG = MotivateMainActivity.class.getName();
 
+  private static final String APP_ENGINE_ORIGIN = "https://sauer-motivate.appspot.com/";
   private static final String AUTH_TOKEN_TYPE_USERINFO_EMAIL = "oauth2:https://www.googleapis.com/auth/userinfo.email";
 
   protected static final int WHITE = Color.rgb(255, 255, 255);
@@ -108,7 +109,7 @@ public class MotivateMainActivity extends Activity {
   protected void testToken(String token) {
     try {
       // TODO Auto-generated method stub
-      String url = "https://fredsa-echo.appspot.com/";
+      String url = APP_ENGINE_ORIGIN;
       Log.i(TAG, "Testing login using " + url);
       List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
       headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
