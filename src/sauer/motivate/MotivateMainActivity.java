@@ -39,11 +39,13 @@ public class MotivateMainActivity extends Activity {
   protected static final int WHITE = Color.rgb(255, 255, 255);
   protected static final int GRAY = Color.rgb(100, 100, 100);
 
-  LinearLayout choreLinearLayout;
-  ArrayList<Chore> chores;
+  private LinearLayout choreLinearLayout;
+  private ArrayList<Chore> chores;
 
-  Date choreDate;
-  DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
+  private String token;
+
+  private Date choreDate;
+  private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
   private MotivateApplication app;
 
   @Override
@@ -76,32 +78,29 @@ public class MotivateMainActivity extends Activity {
     });
   }
 
-  private String token;
-
   private void doToken() {
     AccountManager accountManager = AccountManager.get(this);
+    Log.i(TAG, "accountManager.getAccountsByType(\"com.google\")");
     Account[] accounts = accountManager.getAccountsByType("com.google");
     for (Account account : accounts) {
-      Log.i(TAG, "account.name = " + account.name);
+      Log.i(TAG, "- account.name = " + account.name);
     }
 
-    Log.i(TAG, "Get token...");
-
-    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
-
-    Log.i(TAG, "accounts[0] = " + accounts[0].name);
-    Log.i(TAG, "authTokenType = " + authTokenType);
     if (token != null) {
       Log.i(TAG, "Invalidating previous token: " + token);
       accountManager.invalidateAuthToken(accounts[0].type, token);
     }
+    
+    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
+
+    Log.i(TAG, "Get token for " + accounts[0].name + " using authTokenType " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
 
           public void run(AccountManagerFuture<Bundle> future) {
             try {
               token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-              Log.i(TAG, "Got token: " + token);
+              Log.i(TAG, "Got KEY_AUTHTOKEN: " + token);
               testToken(token);
             } catch (OperationCanceledException e) {
               Log.i(TAG, "The user has denied you access to the API");
@@ -119,7 +118,7 @@ public class MotivateMainActivity extends Activity {
       Log.i(TAG, "Testing login using " + url);
       List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
       headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
-      Util.post(url, "ping", headers);
+      Util.post(url, "this-is-the-request-body", headers);
     } catch (Exception e) {
       Log.i(TAG, "EXECPTION" + e);
     }
