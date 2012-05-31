@@ -76,6 +76,8 @@ public class MotivateMainActivity extends Activity {
     });
   }
 
+  private String token;
+
   private void doToken() {
     AccountManager accountManager = AccountManager.get(this);
     Account[] accounts = accountManager.getAccountsByType("com.google");
@@ -89,11 +91,16 @@ public class MotivateMainActivity extends Activity {
 
     Log.i(TAG, "accounts[0] = " + accounts[0].name);
     Log.i(TAG, "authTokenType = " + authTokenType);
+    if (token != null) {
+      Log.i(TAG, "Invalidating previous token: " + token);
+      accountManager.invalidateAuthToken(accounts[0].type, token);
+    }
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
+
           public void run(AccountManagerFuture<Bundle> future) {
             try {
-              String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+              token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
               Log.i(TAG, "Got token: " + token);
               testToken(token);
             } catch (OperationCanceledException e) {
