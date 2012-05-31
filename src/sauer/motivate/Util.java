@@ -18,15 +18,16 @@ public class Util {
   static String post(String url, String body, List<Pair<String, String>> headers) {
     try {
       URL u = new URL(url);
-      Log.i(TAG, "url: " + u);
+      Log.i(TAG, "[url   ] " + u);
 
       HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
       urlConnection.setDoOutput(true);
       urlConnection.setDoInput(true);
       urlConnection.setChunkedStreamingMode(0);
       urlConnection.setRequestMethod("POST");
-      
+
       for (Pair<String, String> header : headers) {
+        Log.i(TAG, "[header] " + header.first + ": " + header.second);
         urlConnection.addRequestProperty(header.first, header.second);
       }
 

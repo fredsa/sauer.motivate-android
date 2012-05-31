@@ -1,6 +1,5 @@
 package sauer.motivate;
 
-import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
