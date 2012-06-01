@@ -48,7 +48,7 @@ public class MotivateMainActivity extends Activity {
   private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
   private MotivateApplication app;
 
-  @Override
+  @Override 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     choreDate = new Date();
