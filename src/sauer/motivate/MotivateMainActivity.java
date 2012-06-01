@@ -96,7 +96,7 @@ public class MotivateMainActivity extends Activity {
     Log.i(TAG, "Get token for " + accounts[0].name + " using authTokenType " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
-
+          @Override
           public void run(AccountManagerFuture<Bundle> future) {
             try {
               token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
