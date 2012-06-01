@@ -42,8 +42,6 @@ public class MotivateMainActivity extends Activity {
   private LinearLayout choreLinearLayout;
   private ArrayList<Chore> chores;
 
-  private String token;
-
   private Date choreDate;
   private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
   private MotivateApplication app;
@@ -86,9 +84,11 @@ public class MotivateMainActivity extends Activity {
       Log.i(TAG, "- account.name = " + account.name);
     }
 
+    String token = app.getAuthToken();
     if (token != null) {
       Log.i(TAG, "Invalidating previous token: " + token);
       accountManager.invalidateAuthToken(accounts[0].type, token);
+      app.setAuthToken(null);
     }
     
     String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
@@ -99,8 +99,9 @@ public class MotivateMainActivity extends Activity {
           @Override
           public void run(AccountManagerFuture<Bundle> future) {
             try {
-              token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+              String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
               Log.i(TAG, "Got KEY_AUTHTOKEN: " + token);
+              app.setAuthToken(token);
               testToken(token);
             } catch (OperationCanceledException e) {
               Log.i(TAG, "The user has denied you access to the API");
@@ -113,7 +114,6 @@ public class MotivateMainActivity extends Activity {
 
   protected void testToken(String token) {
     try {
-      // TODO Auto-generated method stub
       String url = APP_ENGINE_ORIGIN;
       Log.i(TAG, "Testing login using " + url);
       List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
