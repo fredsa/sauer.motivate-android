@@ -8,5 +8,6 @@
     <string name="add_chore">+ Add chore</string>
     <string name="chore_description">Chore</string>
     <string name="reward">Reward</string>
+    <string name="syncing">Syncing…</string>
 
 </resources>

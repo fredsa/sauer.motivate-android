@@ -16,6 +16,7 @@ import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +47,7 @@ public class MotivateMainActivity extends Activity {
   private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
   private MotivateApplication app;
 
-  @Override 
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     choreDate = new Date();
@@ -71,6 +72,8 @@ public class MotivateMainActivity extends Activity {
       @Override
       public void onClick(View v) {
         send();
+        Intent intent = new Intent(app, SyncingActivity.class);
+        startActivity(intent);
         doToken();
       }
     });
@@ -90,7 +93,7 @@ public class MotivateMainActivity extends Activity {
       accountManager.invalidateAuthToken(accounts[0].type, token);
       app.setAuthToken(null);
     }
-    
+
     String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
 
     Log.i(TAG, "Get token for " + accounts[0].name + " using authTokenType " + authTokenType);
