@@ -24,7 +24,7 @@ public class MotivateApplication extends Application {
     sql = new MySQLiteOpenHelper(this).getWritableDatabase();
   }
 
-  public ArrayList<Chore> getChoresNames() {
+  public ArrayList<Chore> getChores() {
     ArrayList<Chore> list = new ArrayList<Chore>();
     Cursor query = sql.query("chores",
         new String[] {"chore", "reward_amount", "reward_unit"},
