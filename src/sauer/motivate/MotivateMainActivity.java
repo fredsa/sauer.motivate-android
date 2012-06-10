@@ -1,6 +1,5 @@
 package sauer.motivate;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,6 +24,9 @@ public class MotivateMainActivity extends Activity {
   @SuppressWarnings("unused")
   private static final String TAG = MotivateMainActivity.class.getName();
 
+  private static final String DATE_FORMAT_HUMAN = "EEEE, MMMM dd, yyyy";
+  private static final String DATE_FORMAT_DB = "yyyy-MM-dd";
+
   protected static final int WHITE = Color.rgb(255, 255, 255);
   protected static final int GRAY = Color.rgb(100, 100, 100);
 
@@ -31,23 +34,26 @@ public class MotivateMainActivity extends Activity {
   private ArrayList<Chore> chores;
 
   private Date choreDate;
-  private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
   private MotivateApplication app;
+
+  private String date_yyyyMMdd;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    choreDate = new Date();
     app = (MotivateApplication) getApplication();
+
+    choreDate = new Date();
+    date_yyyyMMdd = (String) new DateFormat().format(DATE_FORMAT_DB, choreDate);
 
     setContentView(R.layout.motivate_main);
     choreLinearLayout = (LinearLayout) findViewById(R.id.chore_list_linear_layout);
 
     TextView dayDescriptionTextView = (TextView) findViewById(R.id.day_description_text_view);
-    dayDescriptionTextView.setText(dateFormat.format(choreDate));
+    dayDescriptionTextView.setText(new DateFormat().format(DATE_FORMAT_HUMAN, choreDate));
 
     final TextView addChoreTextView = (TextView) findViewById(R.id.add_chore_text_view);
-    chores = app.getChores();
+    chores = app.getChores(date_yyyyMMdd);
     for (Chore chore : chores) {
       addChore(chore);
     }
@@ -64,6 +70,7 @@ public class MotivateMainActivity extends Activity {
       @Override
       public void onClick(View v) {
         Intent intent = new Intent(app, SyncingActivity.class);
+        intent.putExtra("date", date_yyyyMMdd);
         startActivity(intent);
       }
     });
@@ -79,7 +86,7 @@ public class MotivateMainActivity extends Activity {
     final TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
 
     ToggleButton toggleButton = (ToggleButton) choreView.findViewById(R.id.toggle_button);
-    
+
     toggleButton.setChecked(chore.getCompleted() == 1);
     updateChoreView(rewardTextView, chore.getCompleted() == 1);
 
@@ -111,8 +118,8 @@ public class MotivateMainActivity extends Activity {
         EditText rewardAmountEditText = (EditText) newChoreView.findViewById(R.id.reward_amount);
         EditText rewardUnitEditText = (EditText) newChoreView.findViewById(R.id.reward_unit);
         float amount = Float.parseFloat(rewardAmountEditText.getText().toString());
-        Chore chore = new Chore(choreDescriptionEditText.getText().toString(), amount,
-            rewardUnitEditText.getText().toString(), 0);
+        Chore chore = new Chore(date_yyyyMMdd, choreDescriptionEditText.getText().toString(),
+            amount, rewardUnitEditText.getText().toString(), 0);
         app.insertChore(chore);
         addChore(chore);
       }

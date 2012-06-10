@@ -35,14 +35,18 @@ public class SyncingActivity extends Activity {
 
   private TextView statusTextView;
 
+  private String date_yyyyMMdd;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     app = (MotivateApplication) getApplication();
 
+    Bundle extras = getIntent().getExtras();
+    date_yyyyMMdd = (String) extras.get("date");
+
     setContentView(R.layout.syncing);
     statusTextView = (TextView) findViewById(R.id.sync_status);
-
     doToken();
   }
 
@@ -114,7 +118,7 @@ public class SyncingActivity extends Activity {
 
       private String getSyncPayload() {
         String body = "";
-        for (Chore chore : app.getChores()) {
+        for (Chore chore : app.getChores(date_yyyyMMdd)) {
           body += chore.toString() + "\n";
         }
         return body;
@@ -159,7 +163,7 @@ public class SyncingActivity extends Activity {
 
   protected void send() {
     Hashtable<String, Float> rewards = new Hashtable<String, Float>();
-    for (Chore chore : app.getChores()) {
+    for (Chore chore : app.getChores(date_yyyyMMdd)) {
       if (chore.getCompleted() == 0) {
         continue;
       }

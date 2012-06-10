@@ -24,15 +24,15 @@ public class MotivateApplication extends Application {
     sql = new MySQLiteOpenHelper(this).getWritableDatabase();
   }
 
-  public ArrayList<Chore> getChores() {
+  public ArrayList<Chore> getChores(String date_yyyymmdd) {
     ArrayList<Chore> list = new ArrayList<Chore>();
     Cursor query = sql.query("chores", new String[] {
-        "chore", "reward_amount", "reward_unit", "completed"}, null, null, "chore", null,
-        "chore ASC");
-    Log.d(TAG, "SELECT " + query);
+        "date", "chore", "reward_amount", "reward_unit", "completed"}, "date = ?",
+        new String[] {date_yyyymmdd}, "chore", null, "chore ASC");
+    Log.d(TAG, "SELECT * FROM chores WHERE date = " + date_yyyymmdd);
     while (query.moveToNext()) {
-      Chore chore = new Chore(query.getString(0), query.getFloat(1), query.getString(2),
-          query.getInt(3));
+      Chore chore = new Chore(query.getString(0), query.getString(1), query.getFloat(2),
+          query.getString(3), query.getInt(4));
       Log.d(TAG, "RESULT " + chore);
       list.add(chore);
     }
@@ -41,10 +41,10 @@ public class MotivateApplication extends Application {
 
   public void insertChore(Chore chore) {
     Object[] args = new Object[] {
-        chore.getDescription(), chore.getRewardAmount(), chore.getRewardUnit(),
+        chore.getDate(), chore.getDescription(), chore.getRewardAmount(), chore.getRewardUnit(),
         chore.getCompleted()};
     Log.d(TAG, "INSERT " + chore);
-    sql.execSQL("INSERT INTO chores VALUES (?, ?, ?, ?)", args);
+    sql.execSQL("INSERT INTO chores VALUES (?, ?, ?, ?, ?)", args);
   }
 
   public String getAuthToken() {
