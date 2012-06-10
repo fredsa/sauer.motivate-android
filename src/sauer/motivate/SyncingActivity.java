@@ -103,12 +103,21 @@ public class SyncingActivity extends Activity {
           publishProgress("Testing login using " + url);
           List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
           headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
-          post(url, "this-is-the-request-body", headers);
+          String body = getSyncPayload();
+          post(url, body, headers);
         } catch (Exception e) {
           Log.w("EXCEPTION", e);
           publishProgress("EXECPTION  " + e);
         }
         return null;
+      }
+
+      private String getSyncPayload() {
+        String body = "";
+        for (Chore chore : app.getChores()) {
+          body += chore.toString() + "\n";
+        }
+        return body;
       }
 
       String post(String url, String body, List<Pair<String, String>> headers) {
