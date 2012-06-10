@@ -17,6 +17,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -82,16 +83,69 @@ public class SyncingActivity extends Activity {
         }, null);
   }
 
-  protected void testToken(String token) {
-    try {
-      String url = APP_ENGINE_ORIGIN;
-      setStatus("Testing login using " + url);
-      List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
-      headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
-      post(url, "this-is-the-request-body", headers);
-    } catch (Exception e) {
-      setStatus("EXECPTION" + e);
-    }
+  protected void testToken(final String token) {
+    new AsyncTask<Void, String, Void>() {
+
+      protected void onProgressUpdate(String... values) {
+        for (String v : values) {
+          setStatus(v);
+        }
+      };
+
+      protected void onPostExecute(Void result) {
+        SyncingActivity.this.finish();
+      };
+
+      @Override
+      protected Void doInBackground(Void... params) {
+        try {
+          String url = APP_ENGINE_ORIGIN;
+          publishProgress("Testing login using " + url);
+          List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
+          headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
+          post(url, "this-is-the-request-body", headers);
+        } catch (Exception e) {
+          Log.w("EXCEPTION", e);
+          publishProgress("EXECPTION  " + e);
+        }
+        return null;
+      }
+
+      String post(String url, String body, List<Pair<String, String>> headers) {
+        try {
+          URL u = new URL(url);
+          publishProgress("[url   ] " + u);
+
+          HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
+          urlConnection.setDoOutput(true);
+          urlConnection.setDoInput(true);
+          urlConnection.setChunkedStreamingMode(0);
+          urlConnection.setRequestMethod("POST");
+
+          for (Pair<String, String> header : headers) {
+            publishProgress("[header] " + header.first + ": " + header.second);
+            urlConnection.addRequestProperty(header.first, header.second);
+          }
+
+          OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream(), UTF_8);
+          InputStreamReader reader = new InputStreamReader(urlConnection.getInputStream(), UTF_8);
+
+          publishProgress("-> " + body);
+          writer.write(body);
+
+          String result = read(reader);
+          publishProgress("<- " + result);
+
+          urlConnection.disconnect();
+          return result;
+        } catch (Exception e) {
+          Log.w(TAG, "EXECPTION" + e);
+          throw new RuntimeException(e);
+        }
+      }
+
+    }.execute((Void) null);
+
   }
 
   protected void send() {
@@ -118,39 +172,6 @@ public class SyncingActivity extends Activity {
   private void setStatus(String msg) {
     Log.i(TAG, msg);
     statusTextView.setText(msg);
-  }
-
-  String post(String url, String body, List<Pair<String, String>> headers) {
-    try {
-      URL u = new URL(url);
-      setStatus("[url   ] " + u);
-
-      HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
-      urlConnection.setDoOutput(true);
-      urlConnection.setDoInput(true);
-      urlConnection.setChunkedStreamingMode(0);
-      urlConnection.setRequestMethod("POST");
-
-      for (Pair<String, String> header : headers) {
-        setStatus("[header] " + header.first + ": " + header.second);
-        urlConnection.addRequestProperty(header.first, header.second);
-      }
-
-      OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream(), UTF_8);
-      InputStreamReader reader = new InputStreamReader(urlConnection.getInputStream(), UTF_8);
-
-      setStatus("-> " + body);
-      writer.write(body);
-
-      String result = read(reader);
-      setStatus("<- " + result);
-
-      urlConnection.disconnect();
-      return result;
-    } catch (Exception e) {
-      Log.w(TAG, "EXECPTION" + e);
-      throw new RuntimeException(e);
-    }
   }
 
   static String read(InputStreamReader reader) throws IOException {
