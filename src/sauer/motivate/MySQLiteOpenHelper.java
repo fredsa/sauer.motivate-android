@@ -1,11 +1,8 @@
 package sauer.motivate;
 
-import java.util.Date;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 class MySQLiteOpenHelper extends SQLiteOpenHelper {
@@ -26,15 +23,12 @@ class MySQLiteOpenHelper extends SQLiteOpenHelper {
     createTable(db);
   }
 
-  private void createTable(SQLiteDatabase db) {
-    db.execSQL("CREATE TABLE chores (date TEXT, chore TEXT, reward_amount NUMBER, reward_unit TEXT, completed NUMBER);");
-    String date_yyyyMMdd = (String) new DateFormat().format("yyyy-MM-dd", new Date());
-    db.execSQL("INSERT INTO chores VALUES (\"" + date_yyyyMMdd
-        + "\", \"Made my bed\", \"25\", \"¢\", 0);");
-    db.execSQL("INSERT INTO chores VALUES (\"" + date_yyyyMMdd
-        + "\", \"Brushed my teeth\", \"0.10\", \"USD\", 0);");
-    db.execSQL("INSERT INTO chores VALUES (\"" + date_yyyyMMdd
-        + "\", \"Helped Mom (Bonus)\", \"3\", \"Hugs\", 0);");
+  private void createTable(SQLiteDatabase sql) {
+    Log.d(TAG, "CREATE TABLE...");
+    sql.execSQL("CREATE TABLE chores (date TEXT, chore TEXT, reward_amount NUMBER, reward_unit TEXT, completed NUMBER);");
+    sql.execSQL("INSERT INTO chores VALUES (null, \"Made my bed\", \"25\", \"¢\", 0);");
+    sql.execSQL("INSERT INTO chores VALUES (null, \"Brushed my teeth\", \"0.10\", \"USD\", 0);");
+    sql.execSQL("INSERT INTO chores VALUES (null, \"Helped Mom (Bonus)\", \"3\", \"Hugs\", 0);");
   }
 
   @Override

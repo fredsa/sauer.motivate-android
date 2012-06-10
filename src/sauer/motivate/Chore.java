@@ -1,6 +1,5 @@
 package sauer.motivate;
 
-import java.text.DateFormat;
 
 public class Chore {
 
