@@ -44,13 +44,15 @@ public class MotivateMainActivity extends Activity {
     app = (MotivateApplication) getApplication();
 
     choreDate = new Date();
-    date_yyyyMMdd = (String) new DateFormat().format(DATE_FORMAT_DB, choreDate);
+    new DateFormat();
+    date_yyyyMMdd = (String) DateFormat.format(DATE_FORMAT_DB, choreDate);
 
     setContentView(R.layout.motivate_main);
     choreLinearLayout = (LinearLayout) findViewById(R.id.chore_list_linear_layout);
 
     TextView dayDescriptionTextView = (TextView) findViewById(R.id.day_description_text_view);
-    dayDescriptionTextView.setText(new DateFormat().format(DATE_FORMAT_HUMAN, choreDate));
+    new DateFormat();
+    dayDescriptionTextView.setText(DateFormat.format(DATE_FORMAT_HUMAN, choreDate));
 
     final TextView addChoreTextView = (TextView) findViewById(R.id.add_chore_text_view);
     chores = app.getChores(date_yyyyMMdd);

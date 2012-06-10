@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MotivateApplication extends Application {
   private static final String PREF_OAUTH2_TOKEN = "OAUTH2_TOKEN";
@@ -56,10 +57,16 @@ public class MotivateApplication extends Application {
     Object[] args = new Object[] {
         chore.getDate(), chore.getDescription(), chore.getRewardAmount(), chore.getRewardUnit(),
         chore.getCompleted()};
-    Log.d(TAG, "INSERT " + chore);
+    Log.d(TAG, "INSERT INTO chores" + Arrays.toString(args));
     sql.execSQL("INSERT INTO chores VALUES (?, ?, ?, ?, ?)", args);
+    if (chore.getDate() != null) {
+      args[0] = null;
+      Log.d(TAG, "INSERT INTO chores" + Arrays.toString(args));
+      sql.execSQL("INSERT INTO chores VALUES (?, ?, ?, ?, ?)", args);
+    }
   }
 
+  
   public String getAuthToken() {
     return prefs.getString(PREF_OAUTH2_TOKEN, null);
   }
