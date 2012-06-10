@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -47,6 +48,11 @@ public class MotivateMainActivity extends Activity {
     dayDescriptionTextView.setText(dateFormat.format(choreDate));
 
     final TextView addChoreTextView = (TextView) findViewById(R.id.add_chore_text_view);
+    chores = app.getChores();
+    for (Chore chore : chores) {
+      addChore(chore);
+    }
+
     addChoreTextView.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -62,15 +68,6 @@ public class MotivateMainActivity extends Activity {
         startActivity(intent);
       }
     });
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    chores = app.getChores();
-    for (Chore chore : chores) {
-      addChore(chore);
-    }
   }
 
   private void addChore(final Chore chore) {
