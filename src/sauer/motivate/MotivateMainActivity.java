@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -80,20 +79,18 @@ public class MotivateMainActivity extends Activity {
     final TextView rewardTextView = (TextView) choreView.findViewById(R.id.reward_text);
 
     ToggleButton toggleButton = (ToggleButton) choreView.findViewById(R.id.toggle_button);
+    
+    toggleButton.setChecked(chore.getCompleted() == 1);
+    updateChoreView(rewardTextView, chore.getCompleted() == 1);
+
     toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-          rewardTextView.setTextColor(WHITE);
-        } else {
-          rewardTextView.setTextColor(GRAY);
-        }
-        chore.setCompleted(isChecked);
+        updateChoreView(rewardTextView, isChecked);
+        chore.setCompleted(isChecked ? 1 : 0);
+        app.setChore(chore);
       }
     });
-    //toggle color
-    toggleButton.setChecked(true);
-    toggleButton.setChecked(false);
 
     choreTextView.setText(choreText);
     rewardTextView.setText(rewardText + " " + rewardUnit);
@@ -115,7 +112,7 @@ public class MotivateMainActivity extends Activity {
         EditText rewardUnitEditText = (EditText) newChoreView.findViewById(R.id.reward_unit);
         float amount = Float.parseFloat(rewardAmountEditText.getText().toString());
         Chore chore = new Chore(choreDescriptionEditText.getText().toString(), amount,
-            rewardUnitEditText.getText().toString());
+            rewardUnitEditText.getText().toString(), 0);
         app.insertChore(chore);
         addChore(chore);
       }
@@ -129,6 +126,14 @@ public class MotivateMainActivity extends Activity {
     });
 
     alert.show();
+  }
+
+  private void updateChoreView(final TextView rewardTextView, boolean isChecked) {
+    if (isChecked) {
+      rewardTextView.setTextColor(WHITE);
+    } else {
+      rewardTextView.setTextColor(GRAY);
+    }
   }
 
 }

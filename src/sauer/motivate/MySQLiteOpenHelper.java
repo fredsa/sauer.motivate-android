@@ -24,10 +24,10 @@ class MySQLiteOpenHelper extends SQLiteOpenHelper {
   }
 
   private void createTable(SQLiteDatabase db) {
-    db.execSQL("CREATE TABLE chores (chore TEXT, reward_amount NUMBER, reward_unit TEXT);");
-    db.execSQL("INSERT INTO chores VALUES (\"Made my bed\", \"25\", \"¢\");");
-    db.execSQL("INSERT INTO chores VALUES (\"Brushed my teeth\", \"0.10\", \"USD\");");
-    db.execSQL("INSERT INTO chores VALUES (\"Helped Mom (Bonus)\", \"3\", \"Hugs\");");
+    db.execSQL("CREATE TABLE chores (chore TEXT, reward_amount NUMBER, reward_unit TEXT, completed NUMBER);");
+    db.execSQL("INSERT INTO chores VALUES (\"Made my bed\", \"25\", \"¢\", 0);");
+    db.execSQL("INSERT INTO chores VALUES (\"Brushed my teeth\", \"0.10\", \"USD\", 0);");
+    db.execSQL("INSERT INTO chores VALUES (\"Helped Mom (Bonus)\", \"3\", \"Hugs\", 0);");
   }
 
   @Override

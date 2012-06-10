@@ -5,12 +5,13 @@ public class Chore {
   private final String description;
   private final float rewardAmount;
   private final String rewardUnit;
-  private boolean completed;
+  private int  completed;
 
-  public Chore(String description, float rewardAmount, String rewardUnit) {
+  public Chore(String description, float rewardAmount, String rewardUnit, int completed) {
     this.description = description;
     this.rewardAmount = rewardAmount;
     this.rewardUnit = rewardUnit;
+    this.completed = completed;
   }
 
   @Override
@@ -30,11 +31,11 @@ public class Chore {
     return rewardAmount;
   }
 
-  public void setCompleted(boolean completed) {
+  public void setCompleted(int completed) {
     this.completed = completed;
   }
 
-  public boolean isCompleted() {
+  public int getCompleted() {
     return completed;
   }
 

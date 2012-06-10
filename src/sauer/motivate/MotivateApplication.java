@@ -26,16 +26,13 @@ public class MotivateApplication extends Application {
 
   public ArrayList<Chore> getChores() {
     ArrayList<Chore> list = new ArrayList<Chore>();
-    Cursor query = sql.query("chores",
-        new String[] {"chore", "reward_amount", "reward_unit"},
-        null,
-        null,
-        "chore",
-        null,
+    Cursor query = sql.query("chores", new String[] {
+        "chore", "reward_amount", "reward_unit", "completed"}, null, null, "chore", null,
         "chore ASC");
     Log.d(TAG, "SELECT " + query);
     while (query.moveToNext()) {
-      Chore chore = new Chore(query.getString(0), query.getFloat(1), query.getString(2));
+      Chore chore = new Chore(query.getString(0), query.getFloat(1), query.getString(2),
+          query.getInt(3));
       Log.d(TAG, "RESULT " + chore);
       list.add(chore);
     }
@@ -44,9 +41,10 @@ public class MotivateApplication extends Application {
 
   public void insertChore(Chore chore) {
     Object[] args = new Object[] {
-        chore.getDescription(), chore.getRewardAmount(), chore.getRewardUnit()};
+        chore.getDescription(), chore.getRewardAmount(), chore.getRewardUnit(),
+        chore.getCompleted()};
     Log.d(TAG, "INSERT " + chore);
-    sql.execSQL("INSERT INTO chores VALUES (?, ?, ?)", args);
+    sql.execSQL("INSERT INTO chores VALUES (?, ?, ?, ?)", args);
   }
 
   public String getAuthToken() {
@@ -55,6 +53,17 @@ public class MotivateApplication extends Application {
 
   public void setAuthToken(String authToken) {
     prefs.edit().putString(PREF_OAUTH2_TOKEN, authToken).commit();
+  }
+
+  public void setChore(Chore chore) {
+    deleteChore(chore);
+    insertChore(chore);
+  }
+
+  private void deleteChore(Chore chore) {
+    Object[] args = new Object[] {chore.getDescription()};
+    Log.d(TAG, "DELETE " + chore.getDescription());
+    sql.execSQL("DELETE FROM chores WHERE chore = ?", args);
   }
 
 }

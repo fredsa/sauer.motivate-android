@@ -160,7 +160,7 @@ public class SyncingActivity extends Activity {
   protected void send() {
     Hashtable<String, Float> rewards = new Hashtable<String, Float>();
     for (Chore chore : app.getChores()) {
-      if (!chore.isCompleted()) {
+      if (chore.getCompleted() == 0) {
         continue;
       }
       String unit = chore.getRewardUnit();
