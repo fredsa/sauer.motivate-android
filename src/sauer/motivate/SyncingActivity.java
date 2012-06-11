@@ -66,7 +66,7 @@ public class SyncingActivity extends Activity {
       app.setAccessToken(null);
     }
 
-    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
+    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_PROFILE;
 
     setStatus("Get access token for " + accounts[0].name + " using authTokenType " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
@@ -104,8 +104,19 @@ public class SyncingActivity extends Activity {
       @Override
       protected Void doInBackground(Void... params) {
         try {
+          String url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
+          publishProgress("Calling " + url);
+          List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
+          //          headers.add(new Pair<String, String>("Authorization", "Bearer " + accessToken));
+          get(url, headers);
+        } catch (Exception e) {
+          Log.w("EXCEPTION", e);
+          publishProgress("EXECPTION  " + e);
+        }
+
+        try {
           String url = APP_ENGINE_ORIGIN;
-          publishProgress("Testing login using " + url);
+          publishProgress("Calling " + url);
           List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
           headers.add(new Pair<String, String>("Authorization", "Bearer " + accessToken));
           String body = getSyncPayload();
@@ -126,26 +137,37 @@ public class SyncingActivity extends Activity {
       }
 
       String post(String url, String body, List<Pair<String, String>> headers) {
+        return service("POST", url, body, headers);
+      }
+
+      String get(String url, List<Pair<String, String>> headers) {
+        return service("GET", url, "", headers);
+      }
+
+      String service(String httpMethod, String url, String body, List<Pair<String, String>> headers) {
         try {
           URL u = new URL(url);
           publishProgress("[url   ] " + u);
 
           HttpURLConnection urlConnection = (HttpURLConnection) u.openConnection();
-          urlConnection.setDoOutput(true);
-          urlConnection.setDoInput(true);
+          // urlConnection.setDoOutput(true);
           urlConnection.setChunkedStreamingMode(0);
-          urlConnection.setRequestMethod("POST");
+          urlConnection.setRequestMethod(httpMethod);
 
           for (Pair<String, String> header : headers) {
             publishProgress("[header] " + header.first + ": " + header.second);
             urlConnection.addRequestProperty(header.first, header.second);
           }
 
-          OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream(), UTF_8);
-          InputStreamReader reader = new InputStreamReader(urlConnection.getInputStream(), UTF_8);
+          if ("POST".equals(httpMethod)) {
+            urlConnection.setDoInput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream(),
+                UTF_8);
+            publishProgress("-> " + body);
+            writer.write(body);
+          }
 
-          publishProgress("-> " + body);
-          writer.write(body);
+          InputStreamReader reader = new InputStreamReader(urlConnection.getInputStream(), UTF_8);
 
           String result = read(reader);
           publishProgress("<- " + result);
