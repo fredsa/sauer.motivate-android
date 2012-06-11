@@ -30,6 +30,7 @@ public class SyncingActivity extends Activity {
   private static final String UTF_8 = "UTF-8";
   private static final String APP_ENGINE_ORIGIN = "https://sauer-motivate.appspot.com/";
   private static final String AUTH_TOKEN_TYPE_USERINFO_EMAIL = "oauth2:https://www.googleapis.com/auth/userinfo.email";
+  private static final String AUTH_TOKEN_TYPE_USERINFO_PROFILE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 
   private MotivateApplication app;
 
@@ -87,7 +88,7 @@ public class SyncingActivity extends Activity {
         }, null);
   }
 
-  protected void testToken(final String token) {
+  protected void testToken(final String accessToken) {
     new AsyncTask<Void, String, Void>() {
 
       protected void onProgressUpdate(String... values) {
@@ -106,7 +107,7 @@ public class SyncingActivity extends Activity {
           String url = APP_ENGINE_ORIGIN;
           publishProgress("Testing login using " + url);
           List<Pair<String, String>> headers = new ArrayList<Pair<String, String>>();
-          headers.add(new Pair<String, String>("Authorization", "Bearer " + token));
+          headers.add(new Pair<String, String>("Authorization", "Bearer " + accessToken));
           String body = getSyncPayload();
           post(url, body, headers);
         } catch (Exception e) {
