@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MotivateApplication extends Application {
-  private static final String PREF_OAUTH2_TOKEN = "OAUTH2_TOKEN";
+  private static final String PREF_OAUTH2_ACCESS_TOKEN = "OAUTH2_ACCESS_TOKEN";
 
   private static final String TAG = MotivateApplication.class.getName();
 
@@ -67,12 +67,12 @@ public class MotivateApplication extends Application {
   }
 
   
-  public String getAuthToken() {
-    return prefs.getString(PREF_OAUTH2_TOKEN, null);
+  public String getAccessToken() {
+    return prefs.getString(PREF_OAUTH2_ACCESS_TOKEN, null);
   }
 
-  public void setAuthToken(String authToken) {
-    prefs.edit().putString(PREF_OAUTH2_TOKEN, authToken).commit();
+  public void setAccessToken(String accessToken) {
+    prefs.edit().putString(PREF_OAUTH2_ACCESS_TOKEN, accessToken).commit();
   }
 
   public void setChore(Chore chore) {

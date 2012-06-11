@@ -58,25 +58,25 @@ public class SyncingActivity extends Activity {
       setStatus("- account.name = " + account.name);
     }
 
-    String token = app.getAuthToken();
-    if (token != null) {
-      setStatus("Invalidating previous token: " + token);
-      accountManager.invalidateAuthToken(accounts[0].type, token);
-      app.setAuthToken(null);
+    String accessToken = app.getAccessToken();
+    if (accessToken != null) {
+      setStatus("Invalidating previous OAuth2 access token: " + accessToken);
+      accountManager.invalidateAuthToken(accounts[0].type, accessToken);
+      app.setAccessToken(null);
     }
 
     String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
 
-    setStatus("Get token for " + accounts[0].name + " using authTokenType " + authTokenType);
+    setStatus("Get access token for " + accounts[0].name + " using authTokenType " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,
         new AccountManagerCallback<Bundle>() {
           @Override
           public void run(AccountManagerFuture<Bundle> future) {
             try {
-              String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-              setStatus("Got KEY_AUTHTOKEN: " + token);
-              app.setAuthToken(token);
-              testToken(token);
+              String accessToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+              setStatus("Got OAuth2 access token: " + accessToken);
+              app.setAccessToken(accessToken);
+              testToken(accessToken);
             } catch (OperationCanceledException e) {
               setStatus("The user has denied you access to the API");
             } catch (Exception e) {
