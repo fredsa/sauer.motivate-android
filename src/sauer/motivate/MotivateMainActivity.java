@@ -76,6 +76,9 @@ public class MotivateMainActivity extends Activity {
         startActivity(intent);
       }
     });
+
+    Intent intent = new Intent(this, SettingsActivity.class);
+    startActivity(intent);
   }
 
   private void addChore(final Chore chore) {

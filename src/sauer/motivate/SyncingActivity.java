@@ -66,7 +66,7 @@ public class SyncingActivity extends Activity {
       app.setAccessToken(null);
     }
 
-    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_PROFILE;
+    String authTokenType = AUTH_TOKEN_TYPE_USERINFO_EMAIL;
 
     setStatus("Get access token for " + accounts[0].name + " using authTokenType " + authTokenType);
     accountManager.getAuthToken(accounts[0], authTokenType, null, this,

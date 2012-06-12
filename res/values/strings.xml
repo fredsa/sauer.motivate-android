@@ -9,5 +9,11 @@
     <string name="chore_description">Chore</string>
     <string name="reward">Reward</string>
     <string name="syncing">Syncing…</string>
+    <string name="parent_email">Parent email</string>
+    <string name="radio_parent">I\'m a parent</string>
+    <string name="radio_child">I\'m a child</string>
+    <string name="remove">remove</string>
+    <string name="parent_email_addresses">Parent email address(es)</string>
+    <string name="add_email">+ Email</string>
 
 </resources>
