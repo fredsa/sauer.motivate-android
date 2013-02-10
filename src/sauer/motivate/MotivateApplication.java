@@ -10,7 +10,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import sauer.motivate.MotivateApplication.UserType;
+
 public class MotivateApplication extends Application {
+  private static final String KEY_CHILD_OR_PARENT = "CHILD_OR_PARENT";
+
   private static final String PREF_OAUTH2_ACCESS_TOKEN = "OAUTH2_ACCESS_TOKEN";
 
   private static final String TAG = MotivateApplication.class.getName();
@@ -18,6 +22,10 @@ public class MotivateApplication extends Application {
   private SQLiteDatabase sql;
 
   private SharedPreferences prefs;
+
+  public enum UserType {
+    UNSPECIFIED, PARENT, CHILD;
+  }
 
   @Override
   public void onCreate() {
@@ -66,7 +74,6 @@ public class MotivateApplication extends Application {
     }
   }
 
-  
   public String getAccessToken() {
     return prefs.getString(PREF_OAUTH2_ACCESS_TOKEN, null);
   }
@@ -84,6 +91,14 @@ public class MotivateApplication extends Application {
     Object[] args = new Object[] {chore.getDescription()};
     Log.d(TAG, "DELETE " + chore.getDescription());
     sql.execSQL("DELETE FROM chores WHERE chore = ?", args);
+  }
+
+  public boolean isConfigured() {
+    return prefs.getInt(KEY_CHILD_OR_PARENT, UserType.UNSPECIFIED.ordinal()) != UserType.UNSPECIFIED.ordinal();
+  }
+
+  public void setUserType(UserType type) {
+    prefs.edit().putInt(KEY_CHILD_OR_PARENT, type.ordinal()).apply();
   }
 
 }

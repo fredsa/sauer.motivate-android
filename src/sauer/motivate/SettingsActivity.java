@@ -26,12 +26,27 @@ public class SettingsActivity extends Activity {
 
     RadioButton radioParent = (RadioButton) findViewById(R.id.radio_parent);
     RadioButton radioChild = (RadioButton) findViewById(R.id.radio_child);
+
+    radioParent.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+          app.setUserType(MotivateApplication.UserType.PARENT);
+          finish();
+        }
+      }
+    });
+
     childLinearLayout = findViewById(R.id.child_linear_layout);
     RadioGroup accountRadioGroup = (RadioGroup) findViewById(R.id.account_radio_group);
     radioChild.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         childState(isChecked);
+        if (isChecked) {
+          app.setUserType(MotivateApplication.UserType.CHILD);
+          finish();
+        }
       }
     });
 

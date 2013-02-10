@@ -92,12 +92,13 @@ public class MotivateMainActivity extends Activity {
       GooglePlayServicesUtil.getErrorDialog(resultCode, this, REQUEST_CODE_PLAY_SERVICES).show();
       return;
     }
-
-    Intent intent = new Intent(this, SettingsActivity.class);
-    startActivity(intent);
-   }
+    
+    if (!app.isConfigured()) {
+      Intent intent = new Intent(this, SettingsActivity.class);
+      startActivity(intent);
+    }
   }
-
+  
   private void addChore(final Chore chore) {
     String choreText = chore.getDescription();
     String rewardText = "" + chore.getRewardAmount();
