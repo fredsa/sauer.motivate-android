@@ -20,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 public class MotivateMainActivity extends Activity {
   @SuppressWarnings("unused")
   private static final String TAG = MotivateMainActivity.class.getName();
@@ -29,6 +32,8 @@ public class MotivateMainActivity extends Activity {
 
   protected static final int WHITE = Color.rgb(255, 255, 255);
   protected static final int GRAY = Color.rgb(100, 100, 100);
+
+  private static final int REQUEST_CODE_PLAY_SERVICES = 0;
 
   private LinearLayout choreLinearLayout;
   private ArrayList<Chore> chores;
@@ -76,9 +81,21 @@ public class MotivateMainActivity extends Activity {
         startActivity(intent);
       }
     });
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+    if (resultCode != ConnectionResult.SUCCESS) {
+      resultCode = ConnectionResult.SERVICE_MISSING;
+      GooglePlayServicesUtil.getErrorDialog(resultCode, this, REQUEST_CODE_PLAY_SERVICES).show();
+      return;
+    }
 
     Intent intent = new Intent(this, SettingsActivity.class);
     startActivity(intent);
+   }
   }
 
   private void addChore(final Chore chore) {
